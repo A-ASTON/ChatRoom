@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/d/MyFiles/C++/chatRoom/lib/Server.cpp
+Server.h
+/mnt/d/MyFiles/C++/chatRoom/lib/Server.h
+iostream
+-
+
+/mnt/d/MyFiles/C++/chatRoom/lib/Server.h
+iostream
+-
+
+/mnt/d/MyFiles/C++/chatRoom/src/main.cpp
+iostream
+-
+../lib/Server.h
+/mnt/d/MyFiles/C++/chatRoom/lib/Server.h
+

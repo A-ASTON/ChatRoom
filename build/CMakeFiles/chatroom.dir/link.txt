@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/chatroom.dir/src/main.cpp.o CMakeFiles/chatroom.dir/lib/Server.cpp.o  -o chatroom 

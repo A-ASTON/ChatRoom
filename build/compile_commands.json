@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/mnt/d/MyFiles/C++/chatRoom/build",
+  "command": "/usr/bin/c++    -g   -o CMakeFiles/client.dir/src/ClientMain.cpp.o -c /mnt/d/MyFiles/C++/chatRoom/src/ClientMain.cpp",
+  "file": "/mnt/d/MyFiles/C++/chatRoom/src/ClientMain.cpp"
+},
+{
+  "directory": "/mnt/d/MyFiles/C++/chatRoom/build",
+  "command": "/usr/bin/c++    -g   -o CMakeFiles/client.dir/lib/Client.cpp.o -c /mnt/d/MyFiles/C++/chatRoom/lib/Client.cpp",
+  "file": "/mnt/d/MyFiles/C++/chatRoom/lib/Client.cpp"
+},
+{
+  "directory": "/mnt/d/MyFiles/C++/chatRoom/build",
+  "command": "/usr/bin/c++    -g   -o CMakeFiles/server.dir/src/ServerMain.cpp.o -c /mnt/d/MyFiles/C++/chatRoom/src/ServerMain.cpp",
+  "file": "/mnt/d/MyFiles/C++/chatRoom/src/ServerMain.cpp"
+},
+{
+  "directory": "/mnt/d/MyFiles/C++/chatRoom/build",
+  "command": "/usr/bin/c++    -g   -o CMakeFiles/server.dir/lib/Server.cpp.o -c /mnt/d/MyFiles/C++/chatRoom/lib/Server.cpp",
+  "file": "/mnt/d/MyFiles/C++/chatRoom/lib/Server.cpp"
+}
+]
