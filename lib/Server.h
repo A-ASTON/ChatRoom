@@ -9,6 +9,15 @@
 #ifndef SERVER_H
 #define SERVER_H
 #include <iostream>
+#include<sys/socket.h>
+#include<netinet/in.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<unistd.h>
+#include<errno.h>
+
+#define MAXLINE 4096
 /*
     #ifndef SERVER_H
     #define SERVER_H
@@ -25,19 +34,24 @@ class Server {
         Server() {
             std::cout<<"Create Server!"<<std::endl;
         }
+        // 服务器socket信息配置
+        struct sockaddr_in servaddr;
         
     public:
         // 返回单例服务器实例
         static Server &GetServer();
 
         // 初始化服务器
-        void Init();
+        int Init();
 
         // 启动服务器
-        void Start();
+        int Start();
 
         // 关闭服务器
-        void Close();
+        int Close();
+
+        // 业务逻辑
+        void Serve();
 };
 
 #endif

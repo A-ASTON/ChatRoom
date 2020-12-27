@@ -15,6 +15,20 @@ iostream
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.h
 iostream
 -
+sys/socket.h
+-
+netinet/in.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+unistd.h
+-
+errno.h
+-
 
 /mnt/d/MyFiles/C++/chatRoom/src/ServerMain.cpp
 iostream

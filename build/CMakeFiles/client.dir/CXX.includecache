@@ -13,6 +13,24 @@ Client.h
 /mnt/d/MyFiles/C++/chatRoom/lib/Client.h
 iostream
 -
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+unistd.h
+-
+errno.h
+-
 
 /mnt/d/MyFiles/C++/chatRoom/src/ClientMain.cpp
 ../lib/Client.h
