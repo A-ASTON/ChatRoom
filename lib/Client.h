@@ -10,8 +10,10 @@
 #include<string.h>
 #include<unistd.h>
 #include<errno.h>
-
+#include<string>
+#include <pthread.h>
 #define MAXLINE 4096
+using namespace std;
 class Client {
 private:
     // 一个Client维护自己一个sock描述符就ok

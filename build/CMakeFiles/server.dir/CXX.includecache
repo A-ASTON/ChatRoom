@@ -29,6 +29,10 @@ unistd.h
 -
 errno.h
 -
+string
+-
+time.h
+-
 
 /mnt/d/MyFiles/C++/chatRoom/src/ServerMain.cpp
 iostream

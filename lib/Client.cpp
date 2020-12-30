@@ -1,7 +1,7 @@
 #include "Client.h"
 
 Client::Client() {
-    std::cout<<"ok"<<std::endl;
+    cout<<"ok"<<endl;
 }
 
 int Client::Init() {
@@ -21,24 +21,42 @@ int Client::Start() {
     char recvline[4096], sendline[4096];
     // 创建socket描述字
     if((this->sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        std::cout<<"Create socket error!error:"<<strerror(errno)<<std::endl;
+        cout<<"Create socket error!error:"<<strerror(errno)<<endl;
         return -1;
     }
-
     // 创建connection
     if(connect(sockfd, (struct sockaddr*)&this->clientaddr, sizeof(this->clientaddr)) < 0) {
-        std::cout<<"Accept socket error!error:"<<strerror(errno)<<std::endl;
+        cout<<"Accept socket error!error:"<<strerror(errno)<<endl;
         return -1;
     }
-
-    std::cout<<"Send message to server: \n"<<std::endl;
+    char buff[4096];
+    // 先尝试读,注册信息
+    n = recv(sockfd, buff, MAXLINE, 0);
+    buff[n] = '\0';
+    cout<<"Message from server:\n"<<buff<<endl;
     fgets(sendline, 4096, stdin);
     if(send(sockfd, sendline, strlen(sendline), 0) < 0) {
-        std::cout<<"Send message error!error:"<<strerror(errno)<<std::endl;
+        cout<<"Send message error!error:"<<strerror(errno)<<endl;
         return -1;
     }
+    n = recv(sockfd, buff, MAXLINE, 0);
+    buff[n] = '\0';
+    cout<<buff<<endl;
+    while(1) {
+        cout<<"Send message to server:"<<endl;
+        fgets(sendline, 4096, stdin);
+        cout<<sendline<<endl;
+        if(send(sockfd, sendline, strlen(sendline), 0) < 0) {
+            cout<<"Send message error!error:"<<strerror(errno)<<endl;
+            return -1;
+        }
+        n = recv(sockfd, buff, MAXLINE, 0);
+        buff[n] = '\0';
+        cout<<buff<<endl;
+    }
+    
 
-    close(sockfd);
+    // close(sockfd);
     return 0;
 }
 

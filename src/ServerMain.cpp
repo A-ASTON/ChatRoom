@@ -4,6 +4,6 @@
 int main(int, char**) {
     std::cout << "Hello, world!\n";
     Server server = Server::GetServer();
-    server.Init();
+    server.Init(8099);
     server.Start();
 }
