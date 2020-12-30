@@ -20,7 +20,7 @@
 #include <time.h>
 #define MAXLINE 4096
 // 最大连接数
-#define MAXCONN 100
+#define MAXCONN 5
 using namespace std;
 /*
     #ifndef SERVER_H
@@ -48,9 +48,7 @@ class Server {
     // 服务器采用饿汉单例模式
     private:
         static Server *server;
-        Server() {
-            std::cout<<"Create Server!"<<std::endl;
-        }
+        Server(){}
         // 服务器socket信息配置
         struct sockaddr_in servaddr;
         // 全局维护一个监听sockfd即可

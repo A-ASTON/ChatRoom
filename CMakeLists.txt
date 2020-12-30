@@ -10,3 +10,6 @@ add_executable(client src/ClientMain.cpp lib/Client.cpp)
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+find_package(Threads)
+target_link_libraries(client ${CMAKE_THREAD_LIBS_INIT})

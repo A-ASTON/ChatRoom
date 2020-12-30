@@ -27,7 +27,7 @@ int Server::Init(int port) {
     server->servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     // 服务器监听port端口
     server->servaddr.sin_port = htons(port);
-
+    cout<<"Init Finished!"<<endl;
     // 接下来可以添加，线程池的初始化，等等
     return 1;
 }
@@ -42,20 +42,20 @@ int Server::Start() {
     // 服务器启动，开始监听socket，accept连接后返回一个connfd，并传入Server()函数中
     // 打开socket返回socket描述字，唯一标识一个socket，把它作为参数能进行一些读写操作
     // socket函数:参数1domain:协议域，参数2type:指定socket类型，参数3protocol:指定协议，0为根据type自动选择
-    if((server->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    if ((server->sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         // 获取socket描述字,失败则提示错误信息
         perror("socket()");
         return -1;
     }
 
     // bind函数,把一个地址族中的特定地址赋给socket，ip地址和端口号等等（根据socket的协议域）
-    if(bind(server->sockfd, (struct sockaddr*)&(server->servaddr), sizeof(server->servaddr)) == -1) {
+    if (bind(server->sockfd, (struct sockaddr*)&(server->servaddr), sizeof(server->servaddr)) == -1) {
         perror("bind()");
         return -1;
     }
 
     // listen函数，开始监听，等待连接请求，第二个参数为相应socket可以排队的最大连接数
-    if(listen(server->sockfd, 10) == -1) {
+    if (listen(server->sockfd, 10) == -1) {
         perror("listen()");
         return -1;
     }
@@ -73,31 +73,32 @@ int Server::Start() {
         FD_SET(server->sockfd, &server->fdset);
 
         // 将客户端的连接描述符加入到fdset中
-        for(int i = 0; i < MAXCONN; i++) {
-            if(server->clients[i].clientfd != 0) {
+        for (int i = 0; i < MAXCONN; i++) {
+            if (server->clients[i].clientfd != 0) {
                 FD_SET(server->clients[i].clientfd, &server->fdset);
             }
         }
         
-        // select返回准备好的fd数量,关心传入的fdset读(readset)
+        // select返回准备好的fd数,关心传入的fdset读(readset)
         // 参数依次为：最大文件描述符+1，读，写，异常集，等待时间NULL代表一直等待
-        if(select(maxfd+1, &server->fdset, NULL, NULL, NULL) < 0) {
+        if (select(maxfd+1, &server->fdset, NULL, NULL, NULL) < 0) {
             // select操作将fdset位图置位代表该位掩码下的文件描述符可读
             perror("select()");
             // 此处不应该break吧！！而是将出错的连接sock踢出fdset
-            break;
+            // 有bug... ctrl+c退出的话。。。
+            // break;
         }
 
-        for(int i = 0; i < ccfn; i++) {
+        for (int i = 0; i < ccfn; i++) {
             // 检查每个客户端描述符是否可读
-            if(FD_ISSET(server->clients[i].clientfd, &server->fdset)) {
+            if (FD_ISSET(server->clients[i].clientfd, &server->fdset)) {
                 // 可读则将该描述符传入Serve方法进行处理
                 server->Serve(server->clients[i]);
             }
         }
 
         // 检查是否有新连接
-        if(FD_ISSET(server->sockfd, &server->fdset)) {
+        if (FD_ISSET(server->sockfd, &server->fdset)) {
             // 将来用Register函数替换
             int clientsock;
             int len;
@@ -105,22 +106,24 @@ int Server::Start() {
                 perror("accpet()");
                 continue;
             }
-            if(ccfn < MAXCONN) {
+            if (ccfn < MAXCONN) {
                 // 不超出最大连接数即添加进用户列表
+                cout<<"Registering..."<<endl;
                 server->clients[ccfn++].clientfd = clientsock;
-                strcpy(buff, "Welcome to ChatRoom!\n");
+                strcpy(buff, "Welcome to ChatRoom!\nInput your name:");
                 send(clientsock, buff, strlen(buff), 0);
                 // 接收注册信息：用户名
                 len = recv(clientsock, buff, MAXLINE, 0);
-                if(len < 0) {
+                if (len < 0) {
                     perror("recv()");
                     // 异常处理
                     continue;
                 }
                 // 昵称
-                buff[len] = '\0';
+                buff[len-1] = '\0';
+                cout<<buff<<" registered successfully!"<<endl;
                 server->clients[ccfn - 1].name = buff;
-                strcat(buff, "join the ChatRoom!\n");
+                strcat(buff, " join the ChatRoom!\n");
                 send(clientsock, buff, sizeof(buff), 0);
                 
                 // 更新文件描述符最大值
@@ -171,9 +174,9 @@ void Server::Serve(ClientSubject client) {
     time_t now = time(0);
     char* dt = ctime(&now);
     int len;
-    // 这里有一个阻塞读emmm
+    // 这里有一个阻塞读emmm,没问题的吧，因为是可读才到这里
     len = recv(client.clientfd, buff, sizeof(buff), 0);
-    if(len <= 0) {
+    if (len <= 0) {
         // 该描述符出错
         // 关闭连接并删除
         close(client.clientfd);
@@ -182,6 +185,7 @@ void Server::Serve(ClientSubject client) {
     } else {
         buff[len] = '\0';
         res = string(dt)+ "\n" + client.name + ":" + buff;
-        send(client.clientfd, res.c_str(), sizeof(res.c_str()), 0);
+        cout<<res<<endl;
+        send(client.clientfd, res.c_str(), strlen(res.c_str()), 0);
     }
 }

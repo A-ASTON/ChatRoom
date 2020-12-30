@@ -21,14 +21,25 @@ private:
     struct sockaddr_in clientaddr;
 public:
     Client();
-    void test() {
-        std::cout<<"Client Test~"<<std::endl;
-    }
     // 客户端初始化，返回值为bool
     int Init();
-    // 客户端启动，开始监听用户输入，然后发送到服务器
+
+    // 客户端启动，
     int Start();
+
     // 客户端关闭
     int Close();
+
+    // 注册
+    int Register(int);
+    
+    // 启动
+    int Run(int);
+
+    // 多线程：读线程、写线程
+    // // 用于读线程的函数
+    // void* recvMessage(void*);
+    // // 用于写线程的函数
+    // void* sendMessage(void*);
 };
 #endif
