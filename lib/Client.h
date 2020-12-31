@@ -11,7 +11,8 @@
 #include<unistd.h>
 #include<errno.h>
 #include<string>
-#include <pthread.h>
+#include<pthread.h>
+#include<signal.h>
 #define MAXLINE 4096
 using namespace std;
 class Client {
@@ -20,26 +21,26 @@ private:
     int sockfd;
     struct sockaddr_in clientaddr;
 public:
-    Client();
+    Client(){};
     // 客户端初始化，返回值为bool
-    int Init();
+    void Init();
 
     // 客户端启动，
-    int Start();
+    void Start();
 
     // 客户端关闭
-    int Close();
+    void Close();
 
     // 注册
-    int Register(int);
+    void Register(int);
     
     // 启动
-    int Run(int);
+    void Run(int);
 
-    // 多线程：读线程、写线程
-    // // 用于读线程的函数
-    // void* recvMessage(void*);
-    // // 用于写线程的函数
-    // void* sendMessage(void*);
+    // 多线程：读线程、写线程，需要是全局函数！！
+    // 用于读线程的函数
+    static void* recvMessage(void*);
+    // 用于写线程的函数
+    static void* sendMessage(void*);
 };
 #endif

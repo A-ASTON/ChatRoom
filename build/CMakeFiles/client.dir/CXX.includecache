@@ -35,6 +35,8 @@ string
 -
 pthread.h
 -
+signal.h
+-
 
 /mnt/d/MyFiles/C++/chatRoom/src/ClientMain.cpp
 ../lib/Client.h

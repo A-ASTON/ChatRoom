@@ -1,10 +1,13 @@
 #include "Client.h"
 
-Client::Client() {
-    
+// 信号标志
+volatile sig_atomic_t flag = 0;
+
+static void handler(int sig) {
+    flag = 1;
 }
 
-int Client::Init() {
+void Client::Init() {
     memset(&this->clientaddr, 0, sizeof(this->clientaddr));
     // 协议域
     this->clientaddr.sin_family = AF_INET;
@@ -13,21 +16,19 @@ int Client::Init() {
     inet_pton(AF_INET, "127.0.0.1", &this->clientaddr.sin_addr);
     // 发送端口
     this->clientaddr.sin_port = htons(8099);
-    return 0;
+    return;
 }
 
-int Client::Start() {
+void Client::Start() {
     int n;
     char recvline[4096], sendline[4096];
     // 创建socket描述字
     if ((this->sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
         cout<<"Create socket error!error:"<<strerror(errno)<<endl;
-        return -1;
     }
     // 创建connection
     if (connect(sockfd, (struct sockaddr*)&this->clientaddr, sizeof(this->clientaddr)) < 0) {
         cout<<"Accept socket error!error:"<<strerror(errno)<<endl;
-        return -1;
     }
     
     // 先注册(简化为向服务器发送昵称)
@@ -38,11 +39,11 @@ int Client::Start() {
 
     // 关闭sockfd连接，减少引用计数
     close(sockfd);
-
-    return 0;
+    // 主线程可以关闭，但是读写线程继续运行
+    pthread_exit(NULL);
 }
 
-int Client::Register(int sockfd) {
+void Client::Register(int sockfd) {
     // 阻塞读写即可，获取需注册的信息，因为不注册无法加入聊天室
     int len;
     char buff[MAXLINE];
@@ -57,58 +58,68 @@ int Client::Register(int sockfd) {
     fgets(buff, MAXLINE, stdin);
     send(sockfd, buff, strlen(buff), 0);
 
+    // 清buff！！
+    memset(buff, '\0', sizeof(buff));
     // 获取欢迎信息
     recv(sockfd, buff, sizeof(buff), 0);
     cout<<buff<<endl;
     // close(sockfd);
-    return 0;
 }
 
-void* recvMessage(void* socket) {
+void* Client::recvMessage(void* socket) {
     const int sockfd = *((int*)socket);
     char buff[MAXLINE];
     int len;
     while (1) {
+        memset(buff, '\0', sizeof(buff));
         if ((len =  recv(sockfd, buff, sizeof(buff), 0)) <= 0) {
             perror("recv()");
+            flag = 1;
             break;
         } else {
             buff[len] = '\0';
             cout<<buff<<endl;
         }
     }
+    close(sockfd);
     return 0;
 }
 
-void* sendMessage(void* socket) {
+void* Client::sendMessage(void* socket) {
     const int sockfd = *((int*)socket);
     char buff[MAXLINE];
     while (1) {
         fgets(buff, MAXLINE, stdin);
         if (send(sockfd, buff, strlen(buff), 0) < 0) {
             perror("send()");
-            close(sockfd);
+            flag = 1;
             break;
         }
     }
+    close(sockfd);
     return 0;
 }
 
-int Client::Run(int sockfd) {
+void Client::Run(int sockfd) {
     // 利用pthread创建读写线程
     pthread_t threads[2];
-    if (pthread_create(&threads[0], NULL, recvMessage, (void*)&(sockfd)) != 0) {
+    if (pthread_create(&threads[0], NULL, Client::recvMessage, (void*)&(sockfd)) != 0) {
         perror("pthread_create()");
     }
-    if (pthread_create(&threads[1], NULL, sendMessage, (void *)&(sockfd)) != 0) {
+    if (pthread_create(&threads[1], NULL, Client::sendMessage, (void*)&(sockfd)) != 0) {
         perror("pthread_create()");
     }
     // 不让主线程结束
-    while(1);
+    while(1) {
+        if (flag) {
+            // 检测到信号，执行处理
+            break;
+        }
+    }
+    close(sockfd);
     pthread_exit(NULL);
-    return 0;
 }
 
-int Client::Close() {
-    return 0;
+void Client::Close() {
+    return;
 }

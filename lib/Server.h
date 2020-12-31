@@ -17,7 +17,9 @@
 #include<unistd.h>
 #include<errno.h>
 #include<string>
-#include <time.h>
+#include<time.h>
+#include<mutex>
+#include<pthread.h>
 #define MAXLINE 4096
 // 最大连接数
 #define MAXCONN 5
@@ -57,25 +59,33 @@ class Server {
         fd_set fdset;
         // 全局维护一个客户端实体集
         ClientSubject clients[MAXCONN];
+        // 当前连接数
+        int ccfn = 0;
         
     public:
         // 返回单例服务器实例
         static Server &GetServer();
 
         // 初始化服务器
-        int Init(int);
+        void Init(int);
 
         // 启动服务器
-        int Start();
+        void Start();
 
         // 关闭服务器
-        int Close();
+        void Close();
 
-        // 用户注册
-        void Register(int);
+        // // 用户注册
+        // void Register(int, int&);
 
         // 业务逻辑
         void Serve(ClientSubject);
+
+        // 信息广播
+        void SendAll(string);
+
+        // 注册使用单独线程完成
+        static void* Register(void*); 
 
 };
 

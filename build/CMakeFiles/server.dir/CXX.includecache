@@ -9,8 +9,6 @@
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.cpp
 Server.h
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.h
-iostream
--
 
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.h
 iostream
@@ -32,6 +30,10 @@ errno.h
 string
 -
 time.h
+-
+mutex
+-
+pthread.h
 -
 
 /mnt/d/MyFiles/C++/chatRoom/src/ServerMain.cpp
