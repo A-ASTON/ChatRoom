@@ -2,7 +2,7 @@
 
 int main(int, char**) {
     Client client = Client();
-    client.Init();
+    client.Init(8099);
     client.Start();
     return 0;
 }

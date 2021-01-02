@@ -23,7 +23,7 @@ private:
 public:
     Client(){};
     // 客户端初始化，返回值为bool
-    void Init();
+    void Init(int);
 
     // 客户端启动，
     void Start();
@@ -40,6 +40,7 @@ public:
     // 多线程：读线程、写线程，需要是全局函数！！
     // 用于读线程的函数
     static void* recvMessage(void*);
+    
     // 用于写线程的函数
     static void* sendMessage(void*);
 };

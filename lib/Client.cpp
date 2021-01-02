@@ -7,7 +7,7 @@ static void handler(int sig) {
     flag = 1;
 }
 
-void Client::Init() {
+void Client::Init(int port) {
     memset(&this->clientaddr, 0, sizeof(this->clientaddr));
     // 协议域
     this->clientaddr.sin_family = AF_INET;
@@ -15,7 +15,7 @@ void Client::Init() {
     // 此处默认为127.0.0.1,即本机地址
     inet_pton(AF_INET, "127.0.0.1", &this->clientaddr.sin_addr);
     // 发送端口
-    this->clientaddr.sin_port = htons(8099);
+    this->clientaddr.sin_port = htons(port);
     return;
 }
 
@@ -38,6 +38,7 @@ void Client::Start() {
     Run(sockfd);
 
     // 主线程在Run函数中，等待Run返回后Start返回即可
+    Close();
     return;
 }
 
@@ -64,11 +65,36 @@ void Client::Register(int sockfd) {
     // close(sockfd);
 }
 
+void Client::Run(int sockfd) {
+    // 利用pthread创建读写线程
+    pthread_t threads[2];
+    if (pthread_create(&threads[0], NULL, Client::recvMessage, (void*)&(sockfd)) != 0) {
+        perror("pthread_create()");
+    }
+    if (pthread_create(&threads[1], NULL, Client::sendMessage, (void*)&(sockfd)) != 0) {
+        perror("pthread_create()");
+    }
+    // 主线程检测关闭信号
+    string buff;
+    while(1) {
+        signal(SIGINT, handler);
+        if (flag) {
+            // 检测到信号，执行处理
+            buff = "exit";
+            send(sockfd, buff.c_str(), strlen(buff.c_str()), 0);
+            break;
+        }
+    }
+    cout<<"exit"<<endl;
+    return;
+}
+
 void* Client::recvMessage(void* socket) {
     const int sockfd = *((int*)socket);
     char buff[MAXLINE];
     int len;
     while (1) {
+        // buff清空
         memset(buff, '\0', sizeof(buff));
         if ((len =  recv(sockfd, buff, sizeof(buff), 0)) <= 0) {
             perror("recv()");
@@ -98,31 +124,7 @@ void* Client::sendMessage(void* socket) {
     return 0;
 }
 
-void Client::Run(int sockfd) {
-    // 利用pthread创建读写线程
-    pthread_t threads[2];
-    if (pthread_create(&threads[0], NULL, Client::recvMessage, (void*)&(sockfd)) != 0) {
-        perror("pthread_create()");
-    }
-    if (pthread_create(&threads[1], NULL, Client::sendMessage, (void*)&(sockfd)) != 0) {
-        perror("pthread_create()");
-    }
-    // 主线程检测关闭信号
-    string buff;
-    while(1) {
-        signal(SIGINT, handler);
-        if (flag) {
-            // 检测到信号，执行处理
-            buff = "exit";
-            send(sockfd, buff.c_str(), strlen(buff.c_str()), 0);
-            break;
-        }
-    }
-    cout<<"exit"<<endl;
-    close(sockfd);
-    return;
-}
-
 void Client::Close() {
+    close(sockfd);
     return;
 }
