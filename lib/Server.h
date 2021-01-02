@@ -8,6 +8,7 @@
  */
 #ifndef SERVER_H
 #define SERVER_H
+#include"./AbstractServer.h"
 #include <iostream>
 #include<sys/socket.h>
 #include<netinet/in.h>
@@ -32,21 +33,8 @@ using namespace std;
     通常在头文件中写类的声明、函数原型、#define常数，但不给出具体实现
     定义服务器类
 */
-class ClientSubject {
-    // 代表接入Server的用户实体，存放了Client的相关信息
-    public:
-        // 属于Client的连接描述符
-        int clientfd;
-        string name;
-        ClientSubject():clientfd(0), name(""){
-            //空参构造
-        }
-        ClientSubject(int clientfd, string name):clientfd(clientfd),name(name){}
-        void clear();
-        
-};
 
-class Server {
+class Server:public AbstractServer {
     // 服务器采用饿汉单例模式
     private:
         static Server *server;

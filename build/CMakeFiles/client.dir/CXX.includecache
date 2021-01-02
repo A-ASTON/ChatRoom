@@ -6,11 +6,15 @@
 
 #IncludeRegexTransform: 
 
+/mnt/d/MyFiles/C++/chatRoom/lib/./AbstractClient.h
+
 /mnt/d/MyFiles/C++/chatRoom/lib/Client.cpp
 Client.h
 /mnt/d/MyFiles/C++/chatRoom/lib/Client.h
 
 /mnt/d/MyFiles/C++/chatRoom/lib/Client.h
+./AbstractClient.h
+/mnt/d/MyFiles/C++/chatRoom/lib/./AbstractClient.h
 iostream
 -
 sys/types.h

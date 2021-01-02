@@ -1,5 +1,6 @@
 #ifndef CLIENT_H
 #define CLIENT_H
+#include "./AbstractClient.h"
 #include <iostream>
 #include<sys/types.h>
 #include<sys/socket.h>
@@ -15,7 +16,7 @@
 #include<signal.h>
 #define MAXLINE 4096
 using namespace std;
-class Client {
+class Client:public AbstractClient {
 private:
     // 一个Client维护自己一个sock描述符就ok
     int sockfd;
@@ -40,7 +41,7 @@ public:
     // 多线程：读线程、写线程，需要是全局函数！！
     // 用于读线程的函数
     static void* recvMessage(void*);
-    
+
     // 用于写线程的函数
     static void* sendMessage(void*);
 };

@@ -6,11 +6,17 @@
 
 #IncludeRegexTransform: 
 
+/mnt/d/MyFiles/C++/chatRoom/lib/./AbstractServer.h
+string
+-
+
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.cpp
 Server.h
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.h
 
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.h
+./AbstractServer.h
+/mnt/d/MyFiles/C++/chatRoom/lib/./AbstractServer.h
 iostream
 -
 sys/socket.h
