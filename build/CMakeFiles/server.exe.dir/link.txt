@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/server.exe.dir/src/ServerMain.cpp.o CMakeFiles/server.exe.dir/lib/Server.cpp.o  -o server.exe -lpthread 

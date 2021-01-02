@@ -37,10 +37,8 @@ void Client::Start() {
     // 注册完后，调用Run，开始聊天
     Run(sockfd);
 
-    // 关闭sockfd连接，减少引用计数
-    close(sockfd);
-    // 主线程可以关闭，但是读写线程继续运行
-    pthread_exit(NULL);
+    // 主线程在Run函数中，等待Run返回后Start返回即可
+    return;
 }
 
 void Client::Register(int sockfd) {
@@ -109,15 +107,20 @@ void Client::Run(int sockfd) {
     if (pthread_create(&threads[1], NULL, Client::sendMessage, (void*)&(sockfd)) != 0) {
         perror("pthread_create()");
     }
-    // 不让主线程结束
+    // 主线程检测关闭信号
+    string buff;
     while(1) {
+        signal(SIGINT, handler);
         if (flag) {
             // 检测到信号，执行处理
+            buff = "exit";
+            send(sockfd, buff.c_str(), strlen(buff.c_str()), 0);
             break;
         }
     }
+    cout<<"exit"<<endl;
     close(sockfd);
-    pthread_exit(NULL);
+    return;
 }
 
 void Client::Close() {

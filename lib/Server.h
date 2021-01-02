@@ -42,7 +42,7 @@ class ClientSubject {
             //空参构造
         }
         ClientSubject(int clientfd, string name):clientfd(clientfd),name(name){}
-        void init();
+        void clear();
         
 };
 
@@ -75,17 +75,17 @@ class Server {
         // 关闭服务器
         void Close();
 
-        // // 用户注册
-        // void Register(int, int&);
-
         // 业务逻辑
-        void Serve(ClientSubject);
+        int Recv(ClientSubject);
 
         // 信息广播
         void SendAll(string);
 
         // 注册使用单独线程完成
         static void* Register(void*); 
+
+        // 信息接收与广播采用单独线程完成
+        static void* Serve(void*);
 
 };
 
