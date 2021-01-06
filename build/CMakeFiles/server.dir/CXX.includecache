@@ -43,8 +43,6 @@ pthread.h
 -
 
 /mnt/d/MyFiles/C++/chatRoom/src/ServerMain.cpp
-iostream
--
 ../lib/Server.h
 /mnt/d/MyFiles/C++/chatRoom/lib/Server.h
 

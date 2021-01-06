@@ -22,7 +22,8 @@ private:
     int sockfd;
     struct sockaddr_in clientaddr;
 public:
-    Client(){};
+    Client(){
+    };
     // 客户端初始化，返回值为bool
     void Init(int);
 

@@ -38,7 +38,9 @@ class Server:public AbstractServer {
     // 服务器采用饿汉单例模式
     private:
         static Server *server;
-        Server(){}
+        Server(){
+            
+        }
         // 服务器socket信息配置
         struct sockaddr_in servaddr;
         // 全局维护一个监听sockfd即可
@@ -46,7 +48,7 @@ class Server:public AbstractServer {
         // 全局维护一个fd_set，IO多路复用中使用到的fd集合
         fd_set fdset;
         // 全局维护一个客户端实体集
-        ClientSubject clients[MAXCONN];
+        ClientSubject clients[MAXCONN+1];
         // 当前连接数
         int ccfn = 0;
         

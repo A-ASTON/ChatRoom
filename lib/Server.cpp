@@ -177,6 +177,8 @@ void* Server::Serve(void* temp) {
                     }
                     server->clients[server->ccfn].clear();
                     server->ccfn--;
+                    cout<<"***********The Num of Online:"<<server->ccfn<<"***********"<<endl;
+                    
                 }
             }
         }
