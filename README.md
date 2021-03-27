@@ -8,8 +8,5 @@
 - 进一步研究网络模型，进一步进行改进
 
 ## 当前进度
-- CMakeLists.txt cmake分开编译和运行ServerMain和ClientMain成功
+- ChatRoom v1.0 多客户端连入服务器并进行通信
 
-
-## 接下来要做的事
-- 编写Server和Client，实现单线程利用socket进行简单的信息互通
