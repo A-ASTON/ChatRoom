@@ -34,7 +34,7 @@ void Server::Init(int port) {
     server->servaddr.sin_family = AF_INET;
     // htonl函数，字节序转换host to network long,大端小端问题
     server->servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    // 服务器监听port端口
+    // 服务器监听的port端口
     server->servaddr.sin_port = htons(port);
     cout<<"Init Finished!"<<endl;
     // 接下来可以添加，线程池的初始化，等等
@@ -75,11 +75,14 @@ void Server::Start() {
     // 创建注册线程,最大线程数为连接数
     pthread_t threads[MAXCONN];
     pthread_t readThread;
+
+    // 聊天线程，负责接收信息并回显
     if ((pthread_create(&readThread, NULL, Server::Serve, NULL)) < 0) {
         perror("readThread pthread_create()");
     }
 
     while(1) {
+        // 轮询获取连接
         FD_ZERO(&server->fdset);
         FD_SET(server->sockfd, &server->fdset);
         if (select(server->sockfd + 1, &server->fdset, NULL, NULL, NULL) < 0) {
