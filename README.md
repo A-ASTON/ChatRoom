@@ -11,7 +11,7 @@
 - ChatRoom v1.0 多客户端连入服务器并进行通信
 
 ## 使用方法
-cd ./build
-服务端： ./server 即可启动
+cd ./build    
+服务端： ./server 即可启动    
 客户端： ./client 即可启动
 
